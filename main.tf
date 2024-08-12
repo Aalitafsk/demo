@@ -1,10 +1,11 @@
 
 module "demo-subnet" {
-    source = "modules/subnet/"
+    source = "./modules/subnet/"
     demo-vpc-cidr = var.vpc-cidr
     env = var.environment
     demo-subnet-cidr = var.subnet-cidr
     availability_zone = var.availability_zone
+    # availability_zone
 }
 
 

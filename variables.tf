@@ -9,7 +9,7 @@ variable "demo-vpc" {
 variable "availability_zone" {
     description = "enter here AZ"
     type = string
-    default = "us-east-1b"
+    default = "us-east-1a"
 }
 
 
