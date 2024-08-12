@@ -1,54 +1,26 @@
 
+module "demo-subnet" {
+    source = "modules/subnet/"
+    demo-vpc-cidr = var.vpc-cidr
+    env = var.environment
+    demo-subnet-cidr = var.subnet-cidr
+    availability_zone = var.availability_zone
+}
 
-    resource "aws_vpc" "demo-vpc-1" {
-        provider = aws1.silver
-        cidr_block = var.demo-vpc[0]
-        tags = {
-            Name = "${var.env}-demo-vpc-1"
-        }  
-    }
 
-    resource "aws_subnet" "demo-subnet-1" {
-        provider = aws1.silver
-        vpc_id = aws_vpc.demo-vpc-1.id
-        cidr_block = var.demo-vpc[1]
-        availability_zone = var.availability_zone
-        tags = {
-            Name = "${var.env}-demo-subnet-1"
-        }
-    }
 
-    resource "aws_internet_gateway" "demo-IGW-1" {
-        provider = aws1.silver
-        vpc_id = aws_vpc.demo-vpc-1.id
-        tags = {
-            Name = "${var.env}-demo-IGW-1"
-        }
-    }
-
-    resource "aws_route_table" "demo-route-table-1" {
-        provider = aws1.silver
-        vpc_id = aws_vpc.demo-vpc-1.id
-        route {
-            cidr_block = "0.0.0.0/0"
-            gateway_id = aws_internet_gateway.demo-IGW-1.id
-        }
-        tags = {
-            Name = "${var.env}-demo-route-1"
-        }
-    }
 
     resource "aws_route_table_association" "demo-association-to-subnet" {
         # to make a subnet as the public subnet
-        provider = aws1.silver
-        subnet_id = aws_subnet.demo-subnet-1.id
-        route_table_id = aws_route_table.demo-route-table-1.id
+        # provider = aws1.silver
+        subnet_id = module.demo-subnet.subnet-id.id
+        route_table_id = module.demo-subnet.routtableid.id
     }
 
     resource "aws_security_group" "demo-SG-1" {
-        provider = aws1.silver
+        # provider = aws1.silver
         name = "my-demo-sg"
-        vpc_id = aws_vpc.demo-vpc-1.id
+        vpc_id = module.demo-subnet.vpcid.id
 
         # for inbound/incoming traffic 
         ingress  {
@@ -82,7 +54,7 @@
         }
 
         tags = {
-            Name = "${var.env}-demo-SG-1"
+            Name = "${var.environment}-demo-SG-1"
         }
     }
 
@@ -90,7 +62,7 @@
     # but this are not mostly used since in organization their is the golden image 
     # we use this with the variables and then pass image id in the terraform.tfvars file 
     data "aws_ami" "AMI2-latest" {
-        provider = aws1.silver
+        # provider = aws1.silver
         most_recent = true
         owners = ["amazon"]
         filter {
@@ -108,13 +80,13 @@
     
 
     resource "aws_key_pair" "demo-key-pair" {
-        provider = aws1.silver
+        # provider = aws1.silver
         key_name = "demo-key"
         public_key = file(var.public_key_location)
     }
 
     resource "aws_instance" "demo-ec2-1" {
-        provider = aws1.silver
+        # provider = aws1.silver
         # ami = ami-03972092c42e8c0ca
         # ami is the OS image. this id is changes as per the region 
         ami = data.aws_ami.AMI2-latest.id
@@ -122,7 +94,7 @@
         # this ami_id and instance_type both are required once. and all other are optional 
         # if we not define here then this instance launch in the default vpc one and also AZ
 
-        subnet_id = aws_subnet.demo-subnet-1.id
+        subnet_id = module.demo-subnet.subnet-id.id
         # this is actual list string as ids 's' comes here
         vpc_security_group_ids = [aws_security_group.demo-SG-1.id]
         availability_zone = var.availability_zone
@@ -145,7 +117,7 @@
 # place this file shell-script.sh in same floder along with this file only 
 
         tags = {
-            Name = "${var.env}-demo-ec2"
+            Name = "${var.environment}-demo-ec2"
         }
     }
 
