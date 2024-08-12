@@ -9,7 +9,7 @@ module "demo-subnet" {
 }
 
 module "webserver" {
-    source = "./modules/web-server"
+    source = "./modules/web-server/"
     vpc-id = module.demo-subnet.vpcid.id
     my-ip = var.my-ip
     environment = var.environment
