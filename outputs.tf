@@ -1,12 +1,12 @@
 
 output "ec2-public-ip" {
-    value = aws_instance.demo-ec2-1.public_ip
+    value = module.webserver.ec2-public-ip
 }
 
 output "ec2-private-ip" {
-    value = aws_instance.demo-ec2-1.private_ip
+    value = module.webserver.ec2-private-ip
 }
 
 output "ami-id" {
-    value = data.aws_ami.AMI2-latest.id  
+    value = module.webserver.ami-id
 }

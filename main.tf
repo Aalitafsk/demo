@@ -9,13 +9,14 @@ module "demo-subnet" {
 }
 
 module "webserver" {
-    source = "./modules/web-server/"
+    source = "./modules/web-server"
     vpc-id = module.demo-subnet.vpcid.id
     my-ip = var.my-ip
     environment = var.environment
     public_key_location = var.public_key_location
     instance-type = var.instance-type
     availability_zone = var.availability_zone
+    subnet-id = module.demo-subnet.subnet-id.id
 }
 
 resource "aws_route_table_association" "demo-association-to-subnet" {
