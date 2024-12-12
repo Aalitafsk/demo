@@ -1,0 +1,4 @@
+this to enter the AZ maually via the cli is due to the some issue with subnet module only 
+
+may put the vpc in main.tf 
+and route-table association in the subnet module only 
