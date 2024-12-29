@@ -445,7 +445,7 @@ resource "aws_ebs_volume" "demo-EBS-storage" {
   encrypted = "false"
  
   # final_snapshot - (Optional) If true, snapshot will be created before volume deletion. Any tags on the volume will be migrated to the snapshot. By default set to false
-  final_snapshot = "false"
+  //final_snapshot = "false"
  
   # iops - (Optional)
   iops = "3000" # min-3000  max-16000. Valid for type - io1, io2, gp3
